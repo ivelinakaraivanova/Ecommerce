@@ -1,6 +1,6 @@
 // import { Product } from "../components/Product"
 import { useState, useEffect } from 'react';
-import products from "../products";
+// import products from "../products";
 import { Link, useParams } from 'react-router-dom';
 import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import { Rating } from "../components/Rating";
