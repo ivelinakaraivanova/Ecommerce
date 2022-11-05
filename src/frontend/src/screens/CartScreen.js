@@ -21,7 +21,7 @@ export const CartScreen = () => {
         }
     }, [dispatch, param.id, qty]);
 
-    const removeFromCartHanfler = (id) => {
+    const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id))
     }
 
@@ -69,7 +69,7 @@ export const CartScreen = () => {
                                         <Button
                                             type='button'
                                             variant='light'
-                                            onClick={() => removeFromCartHanfler(item.product)}
+                                            onClick={() => removeFromCartHandler(item.product)}
                                         >
                                             <i className='fas fa-trash'></i>
                                         </Button>
