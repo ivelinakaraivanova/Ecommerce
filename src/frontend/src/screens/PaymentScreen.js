@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Col } from "react-bootstrap";
 import { FormContainer } from '../components/FormContainer';
-import { savePaymentMethod } from '../actions/cartActions';
 import { CheckoutSteps } from '../components/CheckoutSteps';
+import { savePaymentMethod } from '../actions/cartActions';
 
 export const PaymentScreen = () => {
 
@@ -47,7 +47,7 @@ export const PaymentScreen = () => {
                         </Form.Check>
                     </Col>
                 </Form.Group>
-
+                
                 <Button type='submit' variant='primary'>
                     Continue
                 </Button>

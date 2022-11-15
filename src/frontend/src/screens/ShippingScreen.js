@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form } from "react-bootstrap";
 import { FormContainer } from '../components/FormContainer';
-import { saveShippingAddress } from '../actions/cartActions';
 import { CheckoutSteps } from '../components/CheckoutSteps';
+import { saveShippingAddress } from '../actions/cartActions';
 
 
 export const ShippingScreen = () => {
@@ -30,7 +30,7 @@ export const ShippingScreen = () => {
         <FormContainer>
             <CheckoutSteps step1 step2 />
             <h1>Shipping</h1>
-            
+
             <Form onSubmit={submitHandler}>
 
                 <Form.Group controlId='address'>
@@ -69,7 +69,7 @@ export const ShippingScreen = () => {
                     </Form.Control>
                 </Form.Group>
 
-                <Form.Group controlId='countyr'>
+                <Form.Group controlId='country'>
                     <Form.Label>Country</Form.Label>
                     <Form.Control
                         required

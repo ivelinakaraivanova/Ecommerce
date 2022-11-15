@@ -103,8 +103,10 @@ export const ProductScreen = () => {
 
                                     }
 
-                                    <ListGroup.Item className='text-center'>
+                                    <ListGroup.Item>
+                                    <div className="d-grid gap-2">
                                         <Button onClick={addToCartHandler} className='btn-block' disabled={product.countInStock === 0} type='button'>Add to Cart</Button>
+                                    </div>
                                     </ListGroup.Item>
                                 </ListGroup>
                             </Card>
