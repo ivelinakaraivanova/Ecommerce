@@ -9,6 +9,7 @@ export const CartScreen = () => {
     const param = useParams();
     const location = useLocation();
     const qty = location.search ? Number(location.search.split('=')[1]) : 1
+    
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
