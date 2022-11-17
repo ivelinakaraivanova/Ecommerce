@@ -10,27 +10,27 @@ import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 export const PlaceOrderScreen = () => {
 
     const orderCreate = useSelector(state => state.orderCreate);
-    const {order, error, success} = orderCreate;
+    const { order, error, success } = orderCreate;
 
     const dispatch = useDispatch();
-    
+
     const cart = useSelector(state => state.cart);
-    
+
     const navigate = useNavigate();
 
     cart.itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);
     cart.shippingPrice = (cart.itemsPrice > 100 ? 0 : 10).toFixed(2);
-    cart.taxPrice = Number((cart.itemsPrice*0.2)).toFixed(2);
-    cart.totalPrice = (Number(cart.itemsPrice)+Number(cart.shippingPrice)+Number(cart.taxPrice)).toFixed(2);
+    cart.taxPrice = Number((cart.itemsPrice * 0.2)).toFixed(2);
+    cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2);
 
     if (!cart.paymentMethod) {
         navigate('/payment');
     }
-    
+
     useEffect(() => {
-        if(success) {
+        if (success) {
             navigate(`/order/${order._id}`);
-            dispatch({type: ORDER_CREATE_RESET});
+            dispatch({ type: ORDER_CREATE_RESET });
         }
     }, [success, navigate])
 
@@ -53,7 +53,7 @@ export const PlaceOrderScreen = () => {
                 <Col md={8}>
                     <ListGroup variant='flush'>
                         <ListGroup.Item>
-                            <h1>Shipping</h1>
+                            <h2>Shipping</h2>
                             <p>
                                 <strong>Shipping: </strong>
                                 {cart.shippingAddress.address}, {cart.shippingAddress.city}
@@ -65,7 +65,7 @@ export const PlaceOrderScreen = () => {
                         </ListGroup.Item>
 
                         <ListGroup.Item>
-                            <h1>Payment Method</h1>
+                            <h2>Payment Method</h2>
                             <p>
                                 <strong>Method: </strong>
                                 {cart.paymentMethod}
@@ -73,7 +73,7 @@ export const PlaceOrderScreen = () => {
                         </ListGroup.Item>
 
                         <ListGroup.Item>
-                            <h1>Order Items</h1>
+                            <h2>Order Items</h2>
 
                             {cart.cartItems.length === 0
                                 ? <Message variant='info'>
