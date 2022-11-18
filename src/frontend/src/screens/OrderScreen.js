@@ -5,6 +5,7 @@ import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { Message } from '../components/Message';
 import { Loader } from '../components/Loader';
 import { getOrderDetails } from '../actions/orderActions';
+import Moment from 'react-moment';
 
 export const OrderScreen = () => {
     const param = useParams();
@@ -23,6 +24,7 @@ export const OrderScreen = () => {
             dispatch(getOrderDetails(orderId))
         }
     }, [order, orderId])
+
 
     return loading
         ? (<Loader />)
@@ -57,7 +59,9 @@ export const OrderScreen = () => {
                                     </p>
                                     {order.isDelivered
                                         ? (
-                                            <Message variant='success'>Delivered on {order.deliveredAt}</Message>
+                                            <Message variant='success'>
+                                                Delivered on <Moment format="YYYY/MM/DD">{order.deliveredAt}</Moment>
+                                            </Message>
                                         )
                                         : (
                                             <Message variant='warning'>Not Delivered</Message>
@@ -73,86 +77,88 @@ export const OrderScreen = () => {
                                     </p>
                                     {order.isPaid
                                         ? (
-                                            <Message variant='success'>Paid on {order.paidAt}</Message>
-                                        )
-                                        : (
-                                            <Message variant='warning'>Not Paid</Message>
-                                        )
+                                            <Message variant='success'>
+                                                Paid on <Moment format="YYYY/MM/DD">{order.paidAt}</Moment>
+                                            </Message>
+                                )
+                                : (
+                                <Message variant='warning'>Not Paid</Message>
+                                )
                                     }
+                            </ListGroup.Item>
+
+                            <ListGroup.Item>
+                                <h2>Order Items</h2>
+
+                                {order.orderItems.length === 0
+                                    ? <Message variant='info'>
+                                        Order is empty
+                                    </Message>
+                                    : (
+                                        <ListGroup variant='flush'>
+                                            {order.orderItems.map((item, index) => (
+                                                <ListGroup.Item key={index}>
+                                                    <Row>
+                                                        <Col md={1}>
+                                                            <Image src={item.image} alt={item.name} fluid rounded />
+                                                        </Col>
+
+                                                        <Col>
+                                                            <Link to={`/product/${item.product}`}>{item.name}</Link>
+                                                        </Col>
+
+                                                        <Col md={4}>
+                                                            {item.qty} X ${item.price} = ${(item.qty * item.price).toFixed(2)}
+                                                        </Col>
+                                                    </Row>
+                                                </ListGroup.Item>
+                                            ))}
+                                        </ListGroup>
+                                    )
+                                }
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Col>
+
+                    <Col md={4}>
+                        <Card>
+                            <ListGroup variant='flush'>
+                                <ListGroup.Item>
+                                    <h2>Order Summary</h2>
                                 </ListGroup.Item>
 
                                 <ListGroup.Item>
-                                    <h2>Order Items</h2>
-
-                                    {order.orderItems.length === 0
-                                        ? <Message variant='info'>
-                                            Order is empty
-                                        </Message>
-                                        : (
-                                            <ListGroup variant='flush'>
-                                                {order.orderItems.map((item, index) => (
-                                                    <ListGroup.Item key={index}>
-                                                        <Row>
-                                                            <Col md={1}>
-                                                                <Image src={item.image} alt={item.name} fluid rounded />
-                                                            </Col>
-
-                                                            <Col>
-                                                                <Link to={`/product/${item.product}`}>{item.name}</Link>
-                                                            </Col>
-
-                                                            <Col md={4}>
-                                                                {item.qty} X ${item.price} = ${(item.qty * item.price).toFixed(2)}
-                                                            </Col>
-                                                        </Row>
-                                                    </ListGroup.Item>
-                                                ))}
-                                            </ListGroup>
-                                        )
-                                    }
+                                    <Row>
+                                        <Col>Item:</Col>
+                                        <Col>${order.itemsPrice}</Col>
+                                    </Row>
                                 </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <Row>
+                                        <Col>Shipping:</Col>
+                                        <Col>${order.shippingPrice}</Col>
+                                    </Row>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <Row>
+                                        <Col>Tax:</Col>
+                                        <Col>${order.taxPrice}</Col>
+                                    </Row>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                    <Row>
+                                        <Col>Total:</Col>
+                                        <Col>${order.totalPrice}</Col>
+                                    </Row>
+                                </ListGroup.Item>
+
                             </ListGroup>
-                        </Col>
-
-                        <Col md={4}>
-                            <Card>
-                                <ListGroup variant='flush'>
-                                    <ListGroup.Item>
-                                        <h2>Order Summary</h2>
-                                    </ListGroup.Item>
-
-                                    <ListGroup.Item>
-                                        <Row>
-                                            <Col>Item:</Col>
-                                            <Col>${order.itemsPrice}</Col>
-                                        </Row>
-                                    </ListGroup.Item>
-
-                                    <ListGroup.Item>
-                                        <Row>
-                                            <Col>Shipping:</Col>
-                                            <Col>${order.shippingPrice}</Col>
-                                        </Row>
-                                    </ListGroup.Item>
-
-                                    <ListGroup.Item>
-                                        <Row>
-                                            <Col>Tax:</Col>
-                                            <Col>${order.taxPrice}</Col>
-                                        </Row>
-                                    </ListGroup.Item>
-
-                                    <ListGroup.Item>
-                                        <Row>
-                                            <Col>Total:</Col>
-                                            <Col>${order.totalPrice}</Col>
-                                        </Row>
-                                    </ListGroup.Item>
-
-                                </ListGroup>
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
+                        </Card>
+                    </Col>
+                </Row>
+                </div >
             );
 }
