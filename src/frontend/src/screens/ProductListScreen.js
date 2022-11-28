@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Table, Row, Col } from "react-bootstrap";
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
-import { deleteProduct, listProducts } from '../actions/productActions';
+import { createProduct, deleteProduct, listProducts } from '../actions/productActions';
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 
 export const ProductListScreen = () => {
 
@@ -18,17 +19,26 @@ export const ProductListScreen = () => {
     const productDelete = useSelector(state => state.productDelete);
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete;
 
+    const productCreate = useSelector(state => state.productCreate);
+    const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
+
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin;
 
     useEffect(() => {
-        if (userInfo && userInfo.isAdmin) {
-            dispatch(listProducts())
-        } else {
+        dispatch({type: PRODUCT_CREATE_RESET})
+
+        if (!userInfo.isAdmin) {
             navigate('/login')
+        } 
+        
+        if(successCreate) {
+            navigate(`/admin/product/${createdProduct._id}/edit`)
+        } else {
+            dispatch(listProducts())
         }
 
-    }, [dispatch, navigate, userInfo, successDelete])
+    }, [dispatch, navigate, userInfo, successDelete, successCreate, createdProduct])
 
     const deleteHandler = (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
@@ -37,13 +47,13 @@ export const ProductListScreen = () => {
     }
 
     const createProductHandler = () => {
-        //create product
+        dispatch(createProduct())
     }
 
     return (
         <div>
-            <Row>
-                <Col className='align-items-center'>
+            <Row className='align-items-center'>
+                <Col >
                     <h1>Products</h1>
                 </Col>
                 <Col className='text-right'>
@@ -55,7 +65,10 @@ export const ProductListScreen = () => {
 
             {loadingDelete && <Loader />}
             {errorDelete && <Message variant='danger'>{errorDelete}</Message>}
-            
+
+            {loadingCreate && <Loader />}
+            {errorCreate && <Message variant='danger'>{errorCreate}</Message>}
+
             {loading ? (
                 <Loader />
             ) : error ? (
