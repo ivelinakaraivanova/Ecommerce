@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { Message } from '../components/Message';
 import { Loader } from '../components/Loader';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
+import { deliverOrder, getOrderDetails, payOrder } from '../actions/orderActions';
 import Moment from 'react-moment';
 import { PayPalButton } from 'react-paypal-button-v2';
-import { ORDER_PAY_RESET } from '../constants/orderConstants';
+import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../constants/orderConstants';
 
 export const OrderScreen = () => {
+    const navigate = useNavigate();
     const param = useParams();
     const orderId = param.id;
     const dispatch = useDispatch();
@@ -20,7 +21,13 @@ export const OrderScreen = () => {
     const { order, error, loading } = orderDetails;
 
     const orderPay = useSelector(state => state.orderPay);
-    const { loading: loadindPay, success: successPay } = orderPay;
+    const { loading: loadingPay, success: successPay } = orderPay;
+
+    const orderDeliver = useSelector(state => state.orderDeliver);
+    const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
+    const userLogin = useSelector(state => state.userLogin);
+    const { userInfo } = userLogin;
 
     if (!loading && !error) {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);
@@ -40,9 +47,15 @@ export const OrderScreen = () => {
     }
 
     useEffect(() => {
-        if (!order || successPay || order._id !== Number(orderId)) {
-            dispatch({type: ORDER_PAY_RESET})
-            dispatch(getOrderDetails(orderId))
+
+        if (!userInfo) {
+            navigate('/user/login');
+        }
+
+        if (!order || successPay || order._id !== Number(orderId) || successDeliver) {
+            dispatch({ type: ORDER_PAY_RESET });
+            dispatch({ type: ORDER_DELIVER_RESET });
+            dispatch(getOrderDetails(orderId));
         } else if (!order.isPaid) {
             if (!window.paypal) {
                 addPayPalScript()
@@ -50,10 +63,14 @@ export const OrderScreen = () => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch, order, orderId, successPay])
+    }, [dispatch, order, orderId, successPay, successDeliver])
 
     const successPaymentHandler = (paymentResult) => {
         dispatch(payOrder(orderId, paymentResult))
+    }
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(order))
     }
 
     return loading
@@ -187,7 +204,7 @@ export const OrderScreen = () => {
 
                                     {!order.isPaid && (
                                         <ListGroup.Item>
-                                            {loadindPay && <Loader />}
+                                            {loadingPay && <Loader />}
                                             {!sdkReady ? (
                                                 <Loader />
                                             ) : (
@@ -200,7 +217,23 @@ export const OrderScreen = () => {
                                         </ListGroup.Item>
                                     )}
 
+                                    {loadingDeliver && <Loader />}
+                                    {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                        <ListGroup.Item>
+                                            <div className="d-grid gap-2">
+                                                <Button
+                                                    type='button'
+                                                    className='btn btn-block'
+                                                    onClick={deliverHandler}
+                                                >
+                                                    Mark As Delivered
+                                                </Button>
+                                            </div>
+                                        </ListGroup.Item>
+                                    )}
+
                                 </ListGroup>
+
                             </Card>
                         </Col>
                     </Row>
