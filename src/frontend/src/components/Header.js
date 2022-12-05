@@ -2,6 +2,7 @@ import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../actions/userActions';
+import { SearchBox } from './SearchBox';
 
 export const Header = () => {
 
@@ -22,7 +23,9 @@ export const Header = () => {
                         <Navbar.Brand>ProShop</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
+                    <Navbar.Collapse id="basic-navbar-nav" className='justify-content-between'>
+                        <SearchBox />
+
                         <Nav className="mr-auto">
                             <LinkContainer to="/cart">
                                 <Nav.Link><i className='fas fa-shopping-cart'></i>Cart</Nav.Link>
