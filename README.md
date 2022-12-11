@@ -1,2 +1,2 @@
 # Ecommerce
-An eCommerce platform with React and Django
+An eCommerce platform with React and Django REST
