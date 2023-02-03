@@ -23,10 +23,10 @@ export const Header = () => {
                         <Navbar.Brand>ProShop</Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav" className='justify-content-between'>
+                    <Navbar.Collapse id="basic-navbar-nav">
                         <SearchBox />
 
-                        <Nav className="mr-auto">
+                        <Nav className="ms-auto">
                             <LinkContainer to="/cart">
                                 <Nav.Link><i className='fas fa-shopping-cart'></i>Cart</Nav.Link>
                             </LinkContainer>
